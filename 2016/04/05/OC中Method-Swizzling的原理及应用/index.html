@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>OC中Method Swizzling的原理及应用 | Sunshine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="一、前言：我们知道如果要在没有一个类的实现源码的情况下，要改变某方法的实现，可以通过：（1）继承该类然后用子类重写的方法，这个比较常用；（2）也可以为该类添加分类(category)，实现一个同名方法覆盖原方法，这个很少用，因为这样也会影响该类的子类调用它的方法。这里要介绍第三种方法，就是利用Objective-C强大的runtime特性实现的——Method Swizzling。">
+<meta name="keywords" content="Objective-C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OC中Method Swizzling的原理及应用">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;04&#x2F;05&#x2F;OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8&#x2F;index.html">
+<meta property="og:site_name" content="Sunshine">
+<meta property="og:description" content="一、前言：我们知道如果要在没有一个类的实现源码的情况下，要改变某方法的实现，可以通过：（1）继承该类然后用子类重写的方法，这个比较常用；（2）也可以为该类添加分类(category)，实现一个同名方法覆盖原方法，这个很少用，因为这样也会影响该类的子类调用它的方法。这里要介绍第三种方法，就是利用Objective-C强大的runtime特性实现的——Method Swizzling。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;04&#x2F;05&#x2F;OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8&#x2F;040501.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;04&#x2F;05&#x2F;OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8&#x2F;040502.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;04&#x2F;05&#x2F;OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8&#x2F;040503.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;04&#x2F;05&#x2F;OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8&#x2F;040504.png">
+<meta property="og:updated_time" content="2016-05-19T11:55:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2016&#x2F;04&#x2F;05&#x2F;OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8&#x2F;040501.png">
+  
+    <link rel="alternative" href="/atom.xml" title="Sunshine" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/img/logo6.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Gang Yang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">Harder work, happier life.</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/SunshineYG888" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2477038064?refer_flag=1001030101_&is_all=1" title="weibo">weibo</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Objective-C/" style="font-size: 10px;">Objective-C</a> <a href="/tags/iOS-%E5%BC%80%E5%8F%91/" style="font-size: 20px;">iOS 开发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" style="font-size: 15px;">数据结构与算法</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Gang Yang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="/img/logo6.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Gang Yang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">Harder work, happier life.</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/SunshineYG888" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2477038064?refer_flag=1001030101_&is_all=1" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-OC中Method-Swizzling的原理及应用" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/05/OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8/" class="article-date">
+  	<time datetime="2016-04-05T14:05:06.000Z" itemprop="datePublished">2016-04-05</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      OC中Method Swizzling的原理及应用
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Objective-C/" rel="tag">Objective-C</a></li></ul>
+	</div>
+
+        
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、前言："><a href="#一、前言：" class="headerlink" title="一、前言："></a>一、前言：</h2><p>我们知道如果要在没有一个类的实现源码的情况下，要改变某方法的实现，可以通过：<br>（1）继承该类然后用子类重写的方法，这个比较常用；<br>（2）也可以为该类添加分类(category)，实现一个同名方法覆盖原方法，这个很少用，因为这样也会影响该类的子类调用它的方法。<br>这里要介绍第三种方法，就是利用Objective-C强大的runtime特性实现的——Method Swizzling。</p>
+<a id="more"></a>
+
+<h2 id="二、原理："><a href="#二、原理：" class="headerlink" title="二、原理："></a>二、原理：</h2><p>在OC中调用一个对象的某个方法，其实是给一个对象发送消息，这个消息在运行时才被对象接收到.<br>对象查找消息的顺序是：缓存(如果之前调用过同样的方法的话) –&gt;  所属的类 –&gt; 所属的类的父类 –&gt; 所属的类的父类的父类 –&gt; … —&gt; NSObject，如果最后没找到，则报错。<br>那这个只有消息(方法)名,怎么找到相应实现代码呢? 原来该对象的类(或其父类等)都有方法的列表,存放着selectore的名字和方法实现(IMP)的映射关系,而这些IMP正是指向方法实现代码块的指针(类似函数指针).所以对象查找拿到方法名后将其包装成SEL类型的selector,然后拿着这个selector,到通过isa指针找到所属的类(或其父类等)去匹配,找到名字相同的selector则匹配成功,最后执行对应的实现代码.</p>
+<img src="/2016/04/05/OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8/040501.png" class="" title="image1">
+
+<p>简单来说,从接收到消息到执行的过程是: 把方法名包装成SEL à 用名字匹配找到对应的selector à 由selector执行对应的方法实现代码块,而Method Swizzling 则是通过改动最后一个过程,调换selector对应的方法实现,从而达到改变某个方法的实现.<br>如函数 method_exchangeImplementations(Method m1, Method m2) 的原子性(atomic)版的实现过程是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">IMP imp1 &#x3D; method_getImplementation(m1);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">IMP imp2 &#x3D; method_getImplementation(m2);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">method_setImplementation(m1, imp2);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">method_setImplementation(m2, imp1);</span></pre></td></tr></table></figure>
+<p>method_getImplementation是获取某方法的IMP, method_setImplementation 是设置某方法的IMP.虽然Method Swizzling是非原子性的,为了解决安全性和并发性问题,只要将其放在类的load方法里实现就可以了,因为一个类的load只会执行一次.</p>
+<img src="/2016/04/05/OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8/040502.png" class="" title="image1">
+
+<h2 id="三、应用"><a href="#三、应用" class="headerlink" title="三、应用"></a>三、应用</h2><p>那这些方法有什么用处呢?<br>下面我们来设置一个需求:如果你之前做的某个软件的3按钮通过下面代码设置了3个图片:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">- (void)setupImage&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    self.starImageView.image &#x3D; [UIImage imageNamed:@&quot;star&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    self.circleImageView.image &#x3D; [UIImage imageNamed:@&quot;circle&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    self.rectImageView.image &#x3D; [UIImage imageNamed:@&quot;rect&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>而后来你希望用户能通过自己的喜好来选择软件的风格,即换肤,所以你想提供红绿蓝三种风格.</p>
+<img src="/2016/04/05/OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8/040503.png" class="" title="image1">
+
+<img src="/2016/04/05/OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8/040504.png" class="" title="image1">
+
+<p>一种比较简单粗暴的做法是分别设置3种风格下的三个图片:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">- (void)viewDidLoad &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    [super viewDidLoad];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    [self setImagesWithRedSkin];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">- (IBAction)changeSkinsBtnClick:(UIButton *)sender &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    switch (sender.tag) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        case 1:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">            [self setImagesWithRedSkin];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">            break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        case 2:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">            [self setImagesWithGreenSkin];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">            break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">        case 3:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">            [self setImagesWithBlueSkin];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">            break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">        default:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">            break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">&#x2F;* remember choose &quot;Create folder references&quot; when dragging the images into the project *&#x2F;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">- (void)setImagesWithRedSkin&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">    self.starImageView.image &#x3D; [UIImage imageNamed:@&quot;skin&#x2F;red&#x2F;star&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">    self.circleImageView.image &#x3D; [UIImage imageNamed:@&quot;skin&#x2F;red&#x2F;circle&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">    self.rectImageView.image &#x3D; [UIImage imageNamed:@&quot;skin&#x2F;red&#x2F;rect&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">- (void)setImagesWithGreenSkin&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">    self.starImageView.image &#x3D; [UIImage imageNamed:@&quot;skin&#x2F;green&#x2F;star&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">    self.circleImageView.image &#x3D; [UIImage imageNamed:@&quot;skin&#x2F;green&#x2F;circle&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">    self.rectImageView.image &#x3D; [UIImage imageNamed:@&quot;skin&#x2F;green&#x2F;rect&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">- (void)setImagesWithBlueSkin&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">    self.starImageView.image &#x3D; [UIImage imageNamed:@&quot;skin&#x2F;blue&#x2F;star&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">    self.circleImageView.image &#x3D; [UIImage imageNamed:@&quot;skin&#x2F;blue&#x2F;circle&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">    self.rectImageView.image &#x3D; [UIImage imageNamed:@&quot;skin&#x2F;blue&#x2F;rect&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>现在看起来还不是太麻烦,但如果要有10种风格,每种风格要用到10张图片,岂不是要修改10*10次?如果更多呢?<br>这是可以考虑用Method Swizzling,保持原来的设置图片的代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">- (void)setupImage&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    self.starImageView.image &#x3D; [UIImage imageNamed:@&quot;star&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    self.circleImageView.image &#x3D; [UIImage imageNamed:@&quot;circle&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    self.rectImageView.image &#x3D; [UIImage imageNamed:@&quot;rect&quot;];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<p>在用户点击变换风格的时候选择风格,然后在执行设置图片时要判断用户选择了哪种风格,然后根据不同风格设置不同路径的图片</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">- (IBAction)changeSkinSBtnClick:(UIButton *)sender &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">    [YGImage setMode:YGImageModeSkin];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    &#x2F;&#x2F; select a style according to the sender</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    switch (sender.tag) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">        case 1:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">            [YGSkin setStyel:YGSkinStyleRed];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">            break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        case 2:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">            [YGSkin setStyel:YGSkinStyleGreen];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">            break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">        case 3:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">            [YGSkin setStyel:YGSkinStyleBlue];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">            break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">        default:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">            break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    [self setupImage];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+
+<p>其中<br>[YGImage setMode:YGImageModeSkin] 是用来表示进入换肤模式,<br>[YGSkin setStyel :YGSkinStyleRed] 是表示具体选择了哪种风格的皮肤.</p>
+<p>而新的执行方法和调换过程则放在UIImage的分类 UIImage+Swizzle 中:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">@implementation UIImage (Swizzle)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line"> </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">&#x2F;* we can exchange custom methods and system methods in class method &quot;+ load&quot; *&#x2F;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">+ (void)load&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    static dispatch_once_t oneToken;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    dispatch_once(&amp;oneToken, ^&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">        </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">        Method originalMethod &#x3D; class_getClassMethod([self class], @selector(imageNamed:));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">        Method newMethod &#x3D; class_getClassMethod([self class], @selector(newImageNamed:));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">        method_exchangeImplementations(originalMethod, newMethod);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    &#125;);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line"> </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">&#x2F;* new method used to be exchanged with the older one *&#x2F;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">+ (UIImage *)newImageNamed:(NSString *)imageName&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">18</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">19</span></pre></td><td class="code"><pre><span class="line">    NSString *fullImageName &#x3D; imageName;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">20</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">21</span></pre></td><td class="code"><pre><span class="line">    if ([YGImage mode] &#x3D;&#x3D; YGImageModeSkin) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">22</span></pre></td><td class="code"><pre><span class="line">        switch ([YGSkin style]) &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">23</span></pre></td><td class="code"><pre><span class="line">            case YGSkinStyleRed:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">24</span></pre></td><td class="code"><pre><span class="line">                fullImageName &#x3D; [NSString stringWithFormat:@&quot;skin&#x2F;red&#x2F;%@&quot;, imageName];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">25</span></pre></td><td class="code"><pre><span class="line">                break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">26</span></pre></td><td class="code"><pre><span class="line">            case YGSkinStyleGreen:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">27</span></pre></td><td class="code"><pre><span class="line">                fullImageName &#x3D; [NSString stringWithFormat:@&quot;skin&#x2F;green&#x2F;%@&quot;, imageName];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">28</span></pre></td><td class="code"><pre><span class="line">                break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">29</span></pre></td><td class="code"><pre><span class="line">            case YGSkinStyleBlue:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">30</span></pre></td><td class="code"><pre><span class="line">                fullImageName &#x3D; [NSString stringWithFormat:@&quot;skin&#x2F;blue&#x2F;%@&quot;, imageName];</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">31</span></pre></td><td class="code"><pre><span class="line">                break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">32</span></pre></td><td class="code"><pre><span class="line">            default:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">33</span></pre></td><td class="code"><pre><span class="line">                break;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">34</span></pre></td><td class="code"><pre><span class="line">        &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">35</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">36</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">37</span></pre></td><td class="code"><pre><span class="line">    return [UIImage newImageNamed:fullImageName];   &#x2F;&#x2F; actually call - imageNamed:</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">38</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">39</span></pre></td><td class="code"><pre><span class="line">@end</span></pre></td></tr></table></figure>
+
+<p>注意到Method Swizzling应放在某个类的类方法+(void)load中,并在应用程序的一开始就执行, 并用dispatch_once确保代码只被执行一次(貌似也可以不需要).<br>可能你会好奇:在newImageNamed方法中最后调用自身不会形成无限循环么?其实这时已经完成了方法调换,所以调用是原方法 imageNamed 呢.<br>这样用Method Swizzling实现换肤功能就完成了.</p>
+<h2 id="四、其他例子"><a href="#四、其他例子" class="headerlink" title="四、其他例子"></a>四、其他例子</h2><p>(1) github上的 <a href="https://github.com/rentzsch/jrswizzle" target="_blank" rel="noopener">JRSwizzle</a> 把封装了起来,使用比较方便,只需要:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">NSError *error &#x3D;nil;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">[UIImage jr_swizzleClassMethod:@selector(imageNamed:) withClassMethod:@selector(newImageNamed:) error:&amp;error];</span></pre></td></tr></table></figure>
+<p>即可交换两方法. </p>
+<p>其中的实现也是用到了:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">Method origMethod &#x3D; class_getInstanceMethod(self, origSel_);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">Method altMethod &#x3D; class_getInstanceMethod(self, altSel_);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">class_addMethod(self,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">					origSel_,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">					class_getMethodImplementation(self, origSel_),</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">					method_getTypeEncoding(origMethod));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">class_addMethod(self,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">					altSel_,</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">					class_getMethodImplementation(self, altSel_),</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">					method_getTypeEncoding(altMethod));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line"></span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">method_exchangeImplementations(class_getInstanceMethod(self, origSel_), class_getInstanceMethod(self, altSel_));</span></pre></td></tr></table></figure>
+
+<p>(2) github上还有个库 <a href="https://github.com/RuiAAPeres/UIViewController-Swizzled" target="_blank" rel="noopener">UIViewController-Swizzled</a> ,是用来用新的方法调换了原viewController的viewDidAppear方法,打印当前的viewController的名字和深度,有助于开发者处理项目大量的复杂的viewController,其中交换方法的代码是:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">static void swizzInstance(Class class, SEL originalSelector, SEL swizzledSelector)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">&#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">    Method originalMethod &#x3D; class_getInstanceMethod(class, originalSelector);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">4</span></pre></td><td class="code"><pre><span class="line">    Method swizzledMethod &#x3D; class_getInstanceMethod(class, swizzledSelector);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">5</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">6</span></pre></td><td class="code"><pre><span class="line">    BOOL didAddMethod &#x3D;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">7</span></pre></td><td class="code"><pre><span class="line">    class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">8</span></pre></td><td class="code"><pre><span class="line">    </span></pre></td></tr><tr><td class="gutter"><pre><span class="line">9</span></pre></td><td class="code"><pre><span class="line">    if (didAddMethod)</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">10</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">11</span></pre></td><td class="code"><pre><span class="line">        class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod),method_getTypeEncoding(originalMethod));</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">12</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">13</span></pre></td><td class="code"><pre><span class="line">    else</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">14</span></pre></td><td class="code"><pre><span class="line">    &#123;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">15</span></pre></td><td class="code"><pre><span class="line">        method_exchangeImplementations(originalMethod, swizzledMethod);</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">16</span></pre></td><td class="code"><pre><span class="line">    &#125;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">17</span></pre></td><td class="code"><pre><span class="line">&#125;</span></pre></td></tr></table></figure>
+<p>源代码见：<a href="https://github.com/SunshineYG888/MethodSwizzle" target="_blank" rel="noopener">我的Demo</a></p>
+<p>延伸阅读:</p>
+<p><a href="http://blog.csdn.net/yiyaaixuexi/article/details/9374411" target="_blank" rel="noopener">Objective-C的hook方案（一）: Method Swizzling</a></p>
+<p><a href="http://nshipster.com/method-swizzling/" target="_blank" rel="noopener">Method Swizzling</a></p>
+<p><a href="http://southpeak.github.io/blog/2014/11/06/objective-c-runtime-yun-xing-shi-zhi-si-:method-swizzling/" target="_blank" rel="noopener">Objective-C Runtime 运行时之四：Method Swizzling</a></p>
+<p><a href="http://www.jianshu.com/p/438e45528d98" target="_blank" rel="noopener">Method Swizzling 和 AOP 实践</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/05/02/%E5%88%A9%E7%94%A8-class-dump-%E5%92%8C-Hopper-Disassembler-%E5%8F%8D%E7%BC%96%E8%AF%91app/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          利用 class-dump 和 Hopper Disassembler 反编译app
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/04/04/%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F-Count-Sort/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">计数排序 (Count Sort)</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="OC中Method-Swizzling的原理及应用" data-title="OC中Method Swizzling的原理及应用" data-url="http://yoursite.com/2016/04/05/OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 Gang Yang
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>

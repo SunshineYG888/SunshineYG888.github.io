@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Sunshine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Hi, 我是杨刚,这里主要是记录和分享一些关于iOS开发和算法的东西.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sunshine">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;index.html">
+<meta property="og:site_name" content="Sunshine">
+<meta property="og:description" content="Hi, 我是杨刚,这里主要是记录和分享一些关于iOS开发和算法的东西.">
+<meta property="og:locale" content="zh-CN">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternative" href="/atom.xml" title="Sunshine" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/img/logo6.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">Gang Yang</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">Harder work, happier life.</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/SunshineYG888" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2477038064?refer_flag=1001030101_&is_all=1" title="weibo">weibo</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Objective-C/" style="font-size: 10px;">Objective-C</a> <a href="/tags/iOS-%E5%BC%80%E5%8F%91/" style="font-size: 20px;">iOS 开发</a> <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" style="font-size: 15px;">数据结构与算法</a>
+					</div>
+				</section>
+				
+				
+				
+
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">Gang Yang</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="/img/logo6.png" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">Gang Yang</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">Harder work, happier life.</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/SunshineYG888" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2477038064?refer_flag=1001030101_&is_all=1" title="weibo">weibo</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+  
+    <article id="post-Objective-C-Runtime" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/24/Objective-C-Runtime/" class="article-date">
+  	<time datetime="2016-05-24T10:27:20.000Z" itemprop="datePublished">2016-05-24</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/24/Objective-C-Runtime/">Objective-C Runtime</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文整理了下 Objective-C Runtime 中的一些关键理论和一些应用实践，包括以下几部分：</p>
+<img src="/2016/05/24/Objective-C-Runtime/052400.png" class="" title="img">
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Objective-C/" rel="tag">Objective-C</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/05/24/Objective-C-Runtime/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-RunLoop-详解" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/21/RunLoop-%E8%AF%A6%E8%A7%A3/" class="article-date">
+  	<time datetime="2016-05-21T13:10:06.000Z" itemprop="datePublished">2016-05-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/21/RunLoop-%E8%AF%A6%E8%A7%A3/">RunLoop 详解</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><code>RunLoop</code> 是 iOS 和 OSX 开发中非常重要的一个概念，本文主要从以下几部分介绍 <code>RunLoop</code>：</p>
+<img src="/2016/05/21/RunLoop-%E8%AF%A6%E8%A7%A3/052101.png" class="" title="img">
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS-%E5%BC%80%E5%8F%91/" rel="tag">iOS 开发</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/05/21/RunLoop-%E8%AF%A6%E8%A7%A3/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-SDWebImage-源码分析" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/18/SDWebImage-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" class="article-date">
+  	<time datetime="2016-05-18T15:15:09.000Z" itemprop="datePublished">2016-05-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/18/SDWebImage-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">SDWebImage 源码分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>对于著名的第三方库 <a href="https://github.com/rs/SDWebImage" target="_blank" rel="noopener">SDWebImage</a> 我们都不陌生，它在 Github 上的功能介绍是：</p>
+<ol>
+<li>提供UIImageView的一个分类，以支持网络图片的加载与缓存管理</li>
+<li>提供一个异步的图片加载器</li>
+<li>提供一个异步的内存+磁盘图片缓存，并会自动处理缓存过期问题
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS-%E5%BC%80%E5%8F%91/" rel="tag">iOS 开发</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/05/18/SDWebImage-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-利用-class-dump-和-Hopper-Disassembler-反编译app" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/05/02/%E5%88%A9%E7%94%A8-class-dump-%E5%92%8C-Hopper-Disassembler-%E5%8F%8D%E7%BC%96%E8%AF%91app/" class="article-date">
+  	<time datetime="2016-05-02T08:12:49.000Z" itemprop="datePublished">2016-05-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/05/02/%E5%88%A9%E7%94%A8-class-dump-%E5%92%8C-Hopper-Disassembler-%E5%8F%8D%E7%BC%96%E8%AF%91app/">利用 class-dump 和 Hopper Disassembler 反编译app</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、利用-class-dump-查看属性、成员变量、方法声明和实现地址"><a href="#一、利用-class-dump-查看属性、成员变量、方法声明和实现地址" class="headerlink" title="一、利用 class-dump 查看属性、成员变量、方法声明和实现地址"></a>一、利用 class-dump 查看属性、成员变量、方法声明和实现地址</h2><p>只需三步：<br>    1. 安装  class-dump 。<br>    2. 获得 app 的程序文件。<br>    3. 用 class-dump 从 app 的程序文件中 dump 出头文件。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS-%E5%BC%80%E5%8F%91/" rel="tag">iOS 开发</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/05/02/%E5%88%A9%E7%94%A8-class-dump-%E5%92%8C-Hopper-Disassembler-%E5%8F%8D%E7%BC%96%E8%AF%91app/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-OC中Method-Swizzling的原理及应用" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/05/OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8/" class="article-date">
+  	<time datetime="2016-04-05T14:05:06.000Z" itemprop="datePublished">2016-04-05</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/05/OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8/">OC中Method Swizzling的原理及应用</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、前言："><a href="#一、前言：" class="headerlink" title="一、前言："></a>一、前言：</h2><p>我们知道如果要在没有一个类的实现源码的情况下，要改变某方法的实现，可以通过：<br>（1）继承该类然后用子类重写的方法，这个比较常用；<br>（2）也可以为该类添加分类(category)，实现一个同名方法覆盖原方法，这个很少用，因为这样也会影响该类的子类调用它的方法。<br>这里要介绍第三种方法，就是利用Objective-C强大的runtime特性实现的——Method Swizzling。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Objective-C/" rel="tag">Objective-C</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/04/05/OC%E4%B8%ADMethod-Swizzling%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-计数排序-Count-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/04/%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F-Count-Sort/" class="article-date">
+  	<time datetime="2016-04-04T11:16:57.000Z" itemprop="datePublished">2016-04-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/04/%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F-Count-Sort/">计数排序 (Count Sort)</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>简介:</strong></p>
+<p> 计数排序(Count Sort)是一个非基于比较的排序算法，于1954年由 Harold H. Seward 提出。它的优势在于在对一定范围内的整数排序时，它的复杂度为Ο(n+k)（其中k是整数的范围），快于任何比较排序算法。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/04/04/%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F-Count-Sort/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-归并排序 (Merge Sort)" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/04/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%20(Merge%20Sort)/" class="article-date">
+  	<time datetime="2016-04-04T11:02:57.000Z" itemprop="datePublished">2016-04-04</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/04/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%20(Merge%20Sort)/">归并排序 (Merge Sort)</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>简介:</strong></p>
+<p>归并排序是建立在归并操作上的一种有效的排序算法,该算法是采用分治法（Divide and Conquer）的一个非常典型的应用。<br>将已有序的子序列合并，得到完全有序的序列；即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为二路归并。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/04/04/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%20(Merge%20Sort)/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-基数排序 (Radix Sort)" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/03/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%20(Radix%20Sort)/" class="article-date">
+  	<time datetime="2016-04-03T15:08:01.000Z" itemprop="datePublished">2016-04-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/03/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%20(Radix%20Sort)/">基数排序 (Radix Sort)</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>** 简介：**</p>
+<p>基数排序（Radix sort）是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不是只能使用于整数。基数排序的发明可以追溯到1887年Herman Hollerith在打孔卡片制表机（Tabulation Machine）上的贡献</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/04/03/%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F%20(Radix%20Sort)/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-堆排序-Heap-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/03/%E5%A0%86%E6%8E%92%E5%BA%8F-Heap-Sort/" class="article-date">
+  	<time datetime="2016-04-03T12:40:42.000Z" itemprop="datePublished">2016-04-03</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/03/%E5%A0%86%E6%8E%92%E5%BA%8F-Heap-Sort/">堆排序 (Heap Sort)</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>堆排序与快速排序，归并排序一样,是时间复杂度为O(N*logN)的一种排序方法。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>在学习堆排序前,先要理解下面的一些知识:</p>
+<p><strong>满二叉树(Full Binary Tree):</strong>  除最后一层无任何子节点外，每一层上的所有结点都有两个子结点二叉树。<br><strong>完全二叉树：</strong> 除最后一层外，每一层上的节点数均达到最大值的二叉树；即由满二叉树在最后一层上缺少右边的若干结点而成。</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/04/03/%E5%A0%86%E6%8E%92%E5%BA%8F-Heap-Sort/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-修饰-outlet-用-Strong-还是Weak" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/28/%E4%BF%AE%E9%A5%B0-outlet-%E7%94%A8-Strong-%E8%BF%98%E6%98%AFWeak/" class="article-date">
+  	<time datetime="2016-03-28T14:11:32.000Z" itemprop="datePublished">2016-03-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/28/%E4%BF%AE%E9%A5%B0-outlet-%E7%94%A8-Strong-%E8%BF%98%E6%98%AFWeak/">修饰 outlet 用 Strong 还是 Weak?</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Outlet是一个对象的属性(property),这个属性引用了另外一个对象(在nib文件中),它们的引用关系被Interface Builder记录着,每次nib文件被使用来生成视图时,这些引用关系都会被创建,使得该nib文件中的对象与另一个对象中被标记为outlet的属性产生联系.如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span></pre></td><td class="code"><pre><span class="line">@interface GallantViewController : UIViewController</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">2</span></pre></td><td class="code"><pre><span class="line">@property (nonatomic, weak) IBOutlet UISwitch *switch;</span></pre></td></tr><tr><td class="gutter"><pre><span class="line">3</span></pre></td><td class="code"><pre><span class="line">@end</span></pre></td></tr></table></figure>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS-%E5%BC%80%E5%8F%91/" rel="tag">iOS 开发</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/03/28/%E4%BF%AE%E9%A5%B0-outlet-%E7%94%A8-Strong-%E8%BF%98%E6%98%AFWeak/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-冒泡排序，选择排序，插入排序" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/25/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%EF%BC%8C%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F%EF%BC%8C%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/" class="article-date">
+  	<time datetime="2016-03-25T06:57:28.000Z" itemprop="datePublished">2016-03-25</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/25/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%EF%BC%8C%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F%EF%BC%8C%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/">冒泡排序，选择排序，插入排序</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、冒泡排序"><a href="#一、冒泡排序" class="headerlink" title="一、冒泡排序"></a>一、冒泡排序</h2><p><strong>核心思想</strong> </p>
+<p>冒泡排序是从后往前扫，通过与相邻元素的比较和交换，把小的数交换到最前面。即使大的往下沉，而小的往上浮。因为这个过程类似于水泡向上升一样，因此被命名为冒泡排序。 </p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/03/25/%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%EF%BC%8C%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F%EF%BC%8C%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-谈谈-Swift中的-lazy-属性" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/21/%E8%B0%88%E8%B0%88-Swift%E4%B8%AD%E7%9A%84-lazy-%E5%B1%9E%E6%80%A7/" class="article-date">
+  	<time datetime="2016-03-21T06:29:27.000Z" itemprop="datePublished">2016-03-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/03/21/%E8%B0%88%E8%B0%88-Swift%E4%B8%AD%E7%9A%84-lazy-%E5%B1%9E%E6%80%A7/">谈谈 Swift中的 lazy 属性</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-OC中的懒加载"><a href="#1-OC中的懒加载" class="headerlink" title="1.OC中的懒加载:"></a>1.OC中的懒加载:</h3><p>在OC中,为了提高程序的性能,经常使用懒加载来加载一些诸如读取文件,分配内存,加载内容非常复杂的内容等耗时耗内存的操作. 如在控制器中延迟加载一个模型,通常这样重写该getter:</p>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS-%E5%BC%80%E5%8F%91/" rel="tag">iOS 开发</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/03/21/%E8%B0%88%E8%B0%88-Swift%E4%B8%AD%E7%9A%84-lazy-%E5%B1%9E%E6%80%A7/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-（转）iOS常用控件尺寸大集合" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/02/28/%EF%BC%88%E8%BD%AC%EF%BC%89iOS%E5%B8%B8%E7%94%A8%E6%8E%A7%E4%BB%B6%E5%B0%BA%E5%AF%B8%E5%A4%A7%E9%9B%86%E5%90%88/" class="article-date">
+  	<time datetime="2016-02-28T01:35:33.000Z" itemprop="datePublished">2016-02-28</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/02/28/%EF%BC%88%E8%BD%AC%EF%BC%89iOS%E5%B8%B8%E7%94%A8%E6%8E%A7%E4%BB%B6%E5%B0%BA%E5%AF%B8%E5%A4%A7%E9%9B%86%E5%90%88/">（转）iOS常用控件尺寸大集合</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <img src="/2016/02/28/%EF%BC%88%E8%BD%AC%EF%BC%89iOS%E5%B8%B8%E7%94%A8%E6%8E%A7%E4%BB%B6%E5%B0%BA%E5%AF%B8%E5%A4%A7%E9%9B%86%E5%90%88/042801.png" class="" title="img">
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iOS-%E5%BC%80%E5%8F%91/" rel="tag">iOS 开发</a></li></ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a  href="/2016/02/28/%EF%BC%88%E8%BD%AC%EF%BC%89iOS%E5%B8%B8%E7%94%A8%E6%8E%A7%E4%BB%B6%E5%B0%BA%E5%AF%B8%E5%A4%A7%E9%9B%86%E5%90%88/#more">查看全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+  
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2019 Gang Yang
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: true,
+		isPost: false,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  </div>
+</body>
+</html>
