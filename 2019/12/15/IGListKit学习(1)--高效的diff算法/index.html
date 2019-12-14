@@ -25,7 +25,7 @@
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;15&#x2F;IGListKit%E5%AD%A6%E4%B9%A0(1)--%E9%AB%98%E6%95%88%E7%9A%84diff%E7%AE%97%E6%B3%95&#x2F;19121508.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;15&#x2F;IGListKit%E5%AD%A6%E4%B9%A0(1)--%E9%AB%98%E6%95%88%E7%9A%84diff%E7%AE%97%E6%B3%95&#x2F;19121509.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;15&#x2F;IGListKit%E5%AD%A6%E4%B9%A0(1)--%E9%AB%98%E6%95%88%E7%9A%84diff%E7%AE%97%E6%B3%95&#x2F;19121510.png">
-<meta property="og:updated_time" content="2019-12-14T19:36:13.572Z">
+<meta property="og:updated_time" content="2019-12-14T19:48:07.408Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;15&#x2F;IGListKit%E5%AD%A6%E4%B9%A0(1)--%E9%AB%98%E6%95%88%E7%9A%84diff%E7%AE%97%E6%B3%95&#x2F;19121500.png">
   
@@ -207,7 +207,7 @@
         <p>本文目录如图：</p>
 <img src="/2019/12/15/IGListKit%E5%AD%A6%E4%B9%A0(1)--%E9%AB%98%E6%95%88%E7%9A%84diff%E7%AE%97%E6%B3%95/19121500.png" class="" title="img">
 
-<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>近来因为业务需要，学习下如何更好的展示Feed流，而 IGListKit 是 Instagram 用来重构 Feed 流的开源库，可以实现在Feed流灵活的展示各种类型的数据，其中用到的 diff 算法是用来对比两个不同的数组的，使得可以在设置新数组时，界面只对有变化的数据进行更新。这个算法能做到时间复杂度为线性增长，是比较高效的算法。<br>下面分别介绍 <a href="https://dl.acm.org/citation.cfm?id=359467&dl=ACM&coll=DL" target="_blank" rel="noopener">IGListKit 参考的文献</a>中介绍的算法以及 IGListKit 是如何用 Objective-C 来实现这个算法的。</p>
+<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>近来因为业务需要，学习下如何更好的展示Feed流，而 IGListKit 是 Instagram 用来重构 Feed 流的开源库，可以实现在Feed流灵活的展示各种类型的数据，其中用到的 diff 算法是用来对比两个不同的数组的，使得可以在设置新数组时，界面只对有变化的数据进行更新。这个算法能做到时间复杂度为线性增长，是比较高效的算法。<br>下面分别介绍 <a href="https://dl.acm.org/citation.cfm?id=359467&dl=ACM&coll=DL" target="_blank" rel="noopener">IGListKit 参考的文献</a>（也可以在<a href="https://github.com/SunshineYG888/Resources/blob/master/IGListKit/A%20technique%20for%20isolating%20differences%20between%20files.pdf" target="_blank" rel="noopener">这里</a>下载）中介绍的算法以及 IGListKit 是如何用 Objective-C 来实现这个算法的。</p>
 <a id="more"></a>
 
 <h1 id="二、文献中的算法"><a href="#二、文献中的算法" class="headerlink" title="二、文献中的算法"></a>二、文献中的算法</h1><p>我们称原文件(old file)为O，新文件(new file)为N。<br>把文件中每个基本单元当做一行(line)，可以是个字符，单词，句子，或者段落等<br>通过修改O可以得到N。<br>用到的数据结构有3个：一个符号表(symbol table)和两个数组(OA, NA)。</p>
@@ -317,7 +317,9 @@
 <p>也可以表示为图10：</p>
 <img src="/2019/12/15/IGListKit%E5%AD%A6%E4%B9%A0(1)--%E9%AB%98%E6%95%88%E7%9A%84diff%E7%AE%97%E6%B3%95/19121510.png" class="" title="img">
 <p><em>图10. 本文例子中新旧两个数组对比得到的具体差异</em></p>
-<h1 id="四、讨论"><a href="#四、讨论" class="headerlink" title="四、讨论"></a>四、讨论</h1><p>1、文献的算法和 IGListKit  实现的算法对比<br>前者会关注move的范围，后者没有；<br>后者会关注元素是否有update操作，前者没有（因为对比的只是文本）。<br>2、时间复杂度<br>平均情况都是O(m+n)。<br>3、空间复杂度<br>平均情况都是O(m+n)。</p>
+<h1 id="四、讨论"><a href="#四、讨论" class="headerlink" title="四、讨论"></a>四、讨论</h1><p>1、文献的算法和 IGListKit  实现的算法对比<br>前者会关注move的范围，后者没有；<br>后者会关注元素是否有update操作，前者没有（因为对比的只是文本）。</p>
+<p>2、时间复杂度<br>平均情况都是O(m+n)。</p>
+<p>3、空间复杂度<br>平均情况都是O(m+n)。</p>
 <h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><p>IGListKit<br><a href="https://instagram.github.io/IGListKit/" target="_blank" rel="noopener">https://instagram.github.io/IGListKit/</a></p>
 <p>A technique for isolating differences between files<br><a href="https://dl.acm.org/citation.cfm?id=359467&amp;dl=ACM&amp;coll=DL" target="_blank" rel="noopener">https://dl.acm.org/citation.cfm?id=359467&amp;dl=ACM&amp;coll=DL</a></p>
 

@@ -184,7 +184,7 @@
         <p>本文目录如图：</p>
 <img src="/2019/12/15/IGListKit%E5%AD%A6%E4%B9%A0(1)--%E9%AB%98%E6%95%88%E7%9A%84diff%E7%AE%97%E6%B3%95/19121500.png" class="" title="img">
 
-<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>近来因为业务需要，学习下如何更好的展示Feed流，而 IGListKit 是 Instagram 用来重构 Feed 流的开源库，可以实现在Feed流灵活的展示各种类型的数据，其中用到的 diff 算法是用来对比两个不同的数组的，使得可以在设置新数组时，界面只对有变化的数据进行更新。这个算法能做到时间复杂度为线性增长，是比较高效的算法。<br>下面分别介绍 <a href="https://dl.acm.org/citation.cfm?id=359467&dl=ACM&coll=DL" target="_blank" rel="noopener">IGListKit 参考的文献</a>中介绍的算法以及 IGListKit 是如何用 Objective-C 来实现这个算法的。</p>
+<h1 id="一、背景"><a href="#一、背景" class="headerlink" title="一、背景"></a>一、背景</h1><p>近来因为业务需要，学习下如何更好的展示Feed流，而 IGListKit 是 Instagram 用来重构 Feed 流的开源库，可以实现在Feed流灵活的展示各种类型的数据，其中用到的 diff 算法是用来对比两个不同的数组的，使得可以在设置新数组时，界面只对有变化的数据进行更新。这个算法能做到时间复杂度为线性增长，是比较高效的算法。<br>下面分别介绍 <a href="https://dl.acm.org/citation.cfm?id=359467&dl=ACM&coll=DL" target="_blank" rel="noopener">IGListKit 参考的文献</a>（也可以在<a href="https://github.com/SunshineYG888/Resources/blob/master/IGListKit/A%20technique%20for%20isolating%20differences%20between%20files.pdf" target="_blank" rel="noopener">这里</a>下载）中介绍的算法以及 IGListKit 是如何用 Objective-C 来实现这个算法的。</p>
       
     </div>
     
